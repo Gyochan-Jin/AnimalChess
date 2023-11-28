@@ -43,7 +43,7 @@ public:
 	Cow(unsigned int iTeam);
 	bool Move(int ax, int ay, int bx, int by) const;
 	bool Attack(int ax, int ay, int bx, int by) const;
-	void own_ability(int ability_range);
+	void own_ability(int ability_range, int hp);
 };
 class Duck : public Animal {
 private:

@@ -34,9 +34,12 @@ void Animal::change(int hp, int attack_damage){
 }
 
 int Animal::get_attack_damage(){
-	return attack_damage;
+	return this->attack_damage;
 }
 
 bool Animal::get_survive(){
-	return survive;
+	return this->survive;
+}
+int Animal::get_hp() {
+	return this->hp;
 }

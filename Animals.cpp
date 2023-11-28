@@ -1,4 +1,8 @@
 #include "Animals.h"
+#include "Board.h"
+#include <utility>
+
+using namespace std;
 
 // 절댓값을 구하는 간단한 매크로
 #define myabs(x) ((x) < 0 ? -(x) : (x))
@@ -112,7 +116,8 @@ bool Cow::Attack(int ax, int ay, int bx, int by) const {
 }
 void Cow::own_ability(int ability_range, int hp) {
 	//피격 시 자신을 중심으로 3*3 안에 있는 아군에게 공격력+1/체력+1 => change(1, 1) 이용하기
-	pair<int, int> findAllyCow(int ax, int ay) const {
+	
+	pair<int, int> findAllyCow(int ax, int ay) {
 		// 주변 8칸 확인
 		for (int i = -1; i <= 1; ++i) {
 			for (int j = -1; j <= 1; ++j) {
@@ -128,17 +133,14 @@ void Cow::own_ability(int ability_range, int hp) {
 				}
 			}
 		}
-
 		// 주변에 아군 말이 없으면 (-1, -1)을 반환
 		return make_pair(-1, -1);
 	}
 
-	pair<int, int> Coord = FindAllyCow(int ax, int ay);
+	pair<int, int> Coord = findAllyCow(int ax, int ay);
 	int newRow = Coord.first; //아군위치 x좌표
 	int newCol = Coord.second; //아군위치 y좌표
 	pBoard[newRow][newCol].change(1, 1); //아군 공격력 +1
-
-
 }
 
 
@@ -162,7 +164,7 @@ bool Duck::Attack(int ax, int ay, int bx, int by) const {
 
 void Duck::own_ability(int ability_range) {
 	//자신을 중심으로 3*3 안에 있는 아군이 피격 시 해당 아군의 체력+1 => change(1, 0) 이용하기
-	pair<int, int> findAllyDuck(int ax, int ay, int hp, int enemy_attack_damage) const {
+	pair<int, int> findAllyDuck(int ax, int ay, int hp, int enemy_attack_damage) {
 		// 주변 8칸 확인
 		for (int i = -1; i <= 1; ++i) {
 			for (int j = -1; j <= 1; ++j) {
@@ -183,7 +185,7 @@ void Duck::own_ability(int ability_range) {
 		return make_pair(-1, -1);
 	}
 
-	pair<int, int> Coord = FindAllyDuck(int ax, int ay);
+	pair<int, int> Coord = findAllyDuck(int ax, int ay);
 	int AllyX = Coord.first;
 	int AllyY = Coord.Second;
 	bool isgetDamage(int hp, int enemy_attack_damage) {
@@ -220,7 +222,7 @@ void Frog::own_ability(int ability_range) {
 	/*자신과 같은 라인(x축, y축)에 있는 아군의 공격력 + 1
 	x축과 y축에 말이 있는지 확인
 	그 말이 아군이라면 => change(0,1) 이용하기  */
-	pair<int, int> AllyCheck(int ax, int ay) const {
+	pair<int, int> AllyCheck(int ax, int ay) {
 		// 주변 확인
 		for (int i = -4; i <= 4; ++i)
 		{

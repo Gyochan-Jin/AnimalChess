@@ -36,6 +36,7 @@ class Animal{
 		void change(int hp, int attack_damage);
 		int get_attack_damage();
 		bool get_survive();
+		int get_hp();
 		
 	public:
 		const unsigned int &Type = iType;
