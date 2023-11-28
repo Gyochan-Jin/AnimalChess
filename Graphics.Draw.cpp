@@ -3,6 +3,7 @@
 #include "Board.h"
 #include "Graphics.h"
 #include "Animal.h"
+#include "Animals.h"
 
 
 
@@ -45,7 +46,16 @@ void Graphics::Draw(void) const {
 		}
 		cout << endl;
 	}
-	cout << "--|----P1-----|-----P2----" << endl;
-	cout << "  |  HP   AD  |   HP   AD" << endl;
+
+	string animals[] = [cow.get_hp(), duck, frog, rabbit, pig, hippo, elephant]
+
+	Rabbit rabbit(Animal::player1);
+	Rabbit rabbit(Animal::player2);
+
+	cout << "----|----HP----AD----|" << endl;
+	cout << "    |       P1       |" << endl;
+	cout << " R  |    " << rabbit.get_hp() << "    " << rabbit.get_attack_damage() << "    |" << endl;
+	
+	
 	return;
 }
