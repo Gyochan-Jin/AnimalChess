@@ -213,6 +213,28 @@ bool Pig::Attack(int ax, int ay, int bx, int by) const{
 // if((turn % 3)== 0) Pig::own_ability(ability_range);
 void Pig::own_ability(int ability_range){
 	//3의 배수 턴마다 자신을 중심으로 5*5 안에 있는 모든 말(적의 말 포함)에게 체력 +1 => change(1, 0) 이용하기 
+	
+	pair<int, int> findAllyPig(int ax, int ay) {
+		// 주변 8칸 확인
+		for (int i = -2; i <= 2; ++i) {
+			for (int j = -2; j <= 2; ++j) {
+				int newRow = ax + i;
+				int newCol = ay + j;
+
+				// 유효한 범위 내에 있는지 확인
+				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+					return make_pair(newRow, newCol);
+				}
+			}
+		}
+		// 주변에 말이 없으면 (-1, -1)을 반환
+		return make_pair(-1, -1);
+	}
+
+	pair<int, int> Coord = findAllyPig(int ax, int ay);
+	int newRow = Coord.first; //x좌표
+	int newCol = Coord.second; //y좌표
+	pBoard[newRow][newCol].change(1, 0); // 체력+1 
 }
 
 // 하마 클래스 
@@ -232,8 +254,9 @@ bool Hippo::Attack(int ax, int ay, int bx, int by) const{
 	
 	return false;
 }
+// Hippo가 공격한 다음에 own_ability(공격한 상대의 survive); 실행 
 void Hippo::own_ability(bool enemy_survive){
-	//만약 공격한 상대의 hp가 0이하가 되어 survive가 false가 되면 공격력+1, 체력+1 
+	//만약 공격한 상대의 hp가 0이하가 되어 survive가 false가 되면 Hippo의 공격력+1, 체력+1 
 	if(!enemy_survive) change(1, 1); 
 }
 
@@ -258,4 +281,26 @@ bool Elephant::Attack(int ax, int ay, int bx, int by) const{
    own_ability함수 실행 */ 
 void Elephant::own_ability(int ability_range){
 	//공격 시 자신을 중심으로 3*3 안에 있는 모든 말(아군 말 포함) 체력-1
+	
+	pair<int, int> findAllyElephant(int ax, int ay) {
+		// 주변 8칸 확인
+		for (int i = -1; i <= 1; ++i) {
+			for (int j = -1; j <= 1; ++j) {
+				int newRow = ax + i;
+				int newCol = ay + j;
+
+				// 유효한 범위 내에 있는지 확인
+				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+					return make_pair(newRow, newCol);
+				}
+			}
+		}
+		// 주변에 말이 없으면 (-1, -1)을 반환
+		return make_pair(-1, -1);
+	}
+
+	pair<int, int> Coord = findAllyElephant(int ax, int ay);
+	int newRow = Coord.first; // x좌표
+	int newCol = Coord.second; // y좌표
+	pBoard[newRow][newCol].change(-1, 0); //체력 -1 
 }
