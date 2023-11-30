@@ -35,8 +35,12 @@ class Animal{
 		// 말의 능력 중 hp와 공격력을 변화시키는 능력을 구현한 함수(소, 오리, 개구리, 돼지, 하마) 
 		void change(int hp, int attack_damage);
 		int get_attack_damage();
+		const int get_attack_damage() const;
 		bool get_survive();
 		int get_hp();
+		const int get_hp() const;
+		unsigned int get_team();
+		unsigned int get_type();
 		
 	public:
 		const unsigned int &Type = iType;

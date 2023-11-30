@@ -5,15 +5,21 @@
 #include "Animal.h"
 #include "Animals.h"
 
-
+using namespace std;
 
 
 void Graphics::Draw(void) const {
-	using namespace std;
+	
+	
 	//말 좌표 그래픽 구현
 	const char szBottom[] = "ABCDEFGH";
 
 	const Animal* pTarget = 0;
+
+	int player1_animal_hp[7] = {};
+	int player2_animal_hp[7] = {};
+	int player1_animal_damage[7] = {};
+	int player2_animal_damage[7] = {};
 
 	cout << "좌표를 입력하여 말을 움직이세요 ex) B1 B2" << endl;
 
@@ -43,19 +49,33 @@ void Graphics::Draw(void) const {
 				}
 				cout << ToChar(pTarget);
 			}
+
+
+
+
+			unsigned int ianimal[7] = { Animal::Cow, Animal::Duck, Animal::Frog, Animal::Rabbit, Animal::Pig, Animal::Hippo, Animal::Elephant }; 
+
+			// 말들의 hp, attack_damage를 배열에 저장
+			const Animal* currentAnimal = pBoard->GetAnimal(i, j);
+			for(int k = 0; k <= 6; k++ ) {
+				if (currentAnimal != nullptr && currentAnimal->Type == ianimal[k] && currentAnimal->Team == Animal::player1) {
+					player1_animal_hp[k] = currentAnimal->get_hp();
+					player1_animal_damage[k] = currentAnimal->get_attack_damage();
+				}
+				else if (currentAnimal != nullptr && currentAnimal->Type == ianimal[k] && currentAnimal->Team == Animal::player2) {
+					player2_animal_hp[k] = currentAnimal->get_hp();
+					player2_animal_damage[k] = currentAnimal->get_attack_damage();
+			}			
 		}
 		cout << endl;
 	}
-
-	string animals[] = [cow.get_hp(), duck, frog, rabbit, pig, hippo, elephant]
-
-	Rabbit rabbit(Animal::player1);
-	Rabbit rabbit(Animal::player2);
-
-	cout << "----|----HP----AD----|" << endl;
-	cout << "    |       P1       |" << endl;
-	cout << " R  |    " << rabbit.get_hp() << "    " << rabbit.get_attack_damage() << "    |" << endl;
 	
-	
+	string aniname[] = {"C", "D", "F", "R", "P", "H", "E"};
+
+	cout << "    |       P1       |       P2       |" << endl;
+	cout << "----|----HP----AD----|----HP----AD----|" << endl;
+	for (int i = 0; i <= 6; i++) {
+		cout << aniname[i] << " |    " << player1_animal_hp[i] << "    " << player1_animal_damage[i] << " | " << player2_animal_hp[i] << "    " << player2_animal_damage[i] << " | " << endl;
+	}
 	return;
 }

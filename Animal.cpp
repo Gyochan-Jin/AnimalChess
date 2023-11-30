@@ -36,10 +36,24 @@ void Animal::change(int hp, int attack_damage){
 int Animal::get_attack_damage(){
 	return this->attack_damage;
 }
+const int Animal::get_attack_damage() const {
+	return this->attack_damage;
+}
 
 bool Animal::get_survive(){
 	return this->survive;
 }
 int Animal::get_hp() {
 	return this->hp;
+}
+const int Animal::get_hp() const {
+	return this->hp;
+}
+
+unsigned int Animal::get_team() {
+	return this->iTeam;
+}
+
+unsigned int Animal::get_type() {
+	return this->iType;
 }
