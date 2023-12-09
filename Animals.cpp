@@ -2,6 +2,7 @@
 #include "Board.h"
 #include <utility>
 #include <string>
+#include <stdbool.h>
 
 using namespace std;
 
@@ -27,32 +28,30 @@ bool Cow::Attack(int ax, int ay, int bx, int by) const {
 }
 
 
-void Cow::own_ability(int ability_range, int hp) {
+void Cow_own_ability(int ability_range, int hp, int ax, int ay) {
 	//피격 시 자신을 중심으로 3*3 안에 있는 아군에게 공격력+1/체력+1 => change(1, 1) 이용하기
-
-	pair<int, int> findAllyCow(int ax, int ay) {
+	int newRow;
+	int newCol;
+	pair<int, int> findAllyCow; 
 		// 주변 8칸 확인
-		for (int i = -1; i <= 1; ++i) {
-			for (int j = -1; j <= 1; ++j) {
-				int newRow = ax + i;
-				int newCol = ay + j;
+		for (int i = -1; i <= 1; ++i) 
+		{
+			for (int j = -1; j <= 1; ++j) 
+			{
+				newRow = ax + i;
+				newCol = ay + j;
 
 				// 유효한 범위 내에 있는지 확인
 				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
 					// 아군 말이 있는지 확인
-					if (board[newRow][newCol].team == board[ax][ay].team) {
-						return make_pair(newRow, newCol);
+					if (pBoard[newRow][newCol].team == pBoard[ax][ay].team) {
+						findAllyCow = make_pair(newRow, newCol);
 					}
 				}
 			}
 		}
-		// 주변에 아군 말이 없으면 (-1, -1)을 반환
-		return make_pair(-1, -1);
-	}
-
-	pair<int, int> Coord = findAllyCow(int ax, int ay);
-	int newRow = Coord.first; //아군위치 x좌표
-	int newCol = Coord.second; //아군위치 y좌표
+	findAllyCow.first = newRow; //아군위치 x좌표
+	findAllyCow.second = newCol; //아군위치 y좌표
 	pBoard[newRow][newCol].change(1, 1); //아군 공격력 +1
 }
 
@@ -75,42 +74,34 @@ bool Duck::Attack(int ax, int ay, int bx, int by) const {
 }
 
 
-void Duck::own_ability(int ability_range) {
+void Duck_own_ability(int ability_range, int ax, int ay) {
 	//자신을 중심으로 3*3 안에 있는 아군이 피격 시 해당 아군의 체력+1 => change(1, 0) 이용하기
-	pair<int, int> findAllyDuck(int ax, int ay, int hp, int enemy_attack_damage) {
+	int newRow;
+	int newCol;
+	pair<int, int> findAllyDuck;
 		// 주변 8칸 확인
-		for (int i = -1; i <= 1; ++i) {
-			for (int j = -1; j <= 1; ++j) {
-				int newRow = ax + i;
-				int newCol = ay + j;
-
+		for (int i = -1; i <= 1; ++i) 
+		{
+			for (int j = -1; j <= 1; ++j) 
+			{
+				newRow = ax + i;
+				newCol = ay + j;
 				// 유효한 범위 내에 있는지 확인
-				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) 
+				{
 					// 아군 말이 있는지 확인
-					if (board[newRow][newCol].team == board[ax][ay].team) {
-						return make_pair(newRow, newCol);
+					if (pBoard[newRow][newCol].team == pBoard[ax][ay].team) 
+					{
+						findAllyDuck = make_pair(newRow, newCol);
 					}
 				}
 			}
 		}
-
-		// 주변에 아군 말이 없으면 (-1, -1)을 반환
-		return make_pair(-1, -1);
-	}
-
-	pair<int, int> Coord = findAllyDuck(int ax, int ay);
-	int AllyX = Coord.first;
-	int AllyY = Coord.Second;
-	bool isgetDamage(int hp, int enemy_attack_damage) {
-		int newhp = hp - enemy_attack_damage;
-		return newhp <= 0;
-	}
-	if (Coord.first != -1 && Coord.second != -1)
+	findAllyDuck.first = newRow;
+	findAllyDuck.second = newCol;
+	if (findAllyDuck.first != -1 && findAllyDuck.second != -1)
 	{
-		if (isgetDamage(pBoard[AllyX][AllyY].hp, enemy_attack_Damage))
-		{
-			pBoard[AllyX][AllyY].change(1, 0); //아군 체력 +1
-		}
+		pBoard[findAllyDuck.first][findAllyDuck.second].change(1, 0); //아군 체력 +1
 	}
 }
 
@@ -131,11 +122,11 @@ bool Frog::Attack(int ax, int ay, int bx, int by) const {
 
 	return false;
 }
-void Frog::own_ability(int ability_range) {
+void Frog_own_ability(int ability_range, int ax, int ay) {
 	/*자신과 같은 라인(x축, y축)에 있는 아군의 공격력 + 1
 	x축과 y축에 말이 있는지 확인
 	그 말이 아군이라면 => change(0,1) 이용하기  */
-	pair<int, int> AllyCheck(int ax, int ay) {
+	pair<int, int> FindAllyFrog;
 		// 주변 확인
 		for (int i = -4; i <= 4; ++i)
 		{
@@ -146,7 +137,7 @@ void Frog::own_ability(int ability_range) {
 				// x축에 아군 말이 있는지 확인
 				if (pBoard[newX][ay].team == pBoard[ax][ay].team)
 				{
-					return make_pair(newX, ay); //아군말 좌표 반환
+					FindAllyFrog =  make_pair(newX, ay); //아군말 좌표 반환
 				}
 			}
 			int newY = ay + i;
@@ -156,16 +147,14 @@ void Frog::own_ability(int ability_range) {
 				// y축에 아군 말이 있는지 확인
 				if (pBoard[ax][newY].team == pBoard[ax][ay].team)
 				{
-					return make_pair(ax, newY);
+					FindAllyFrog =  make_pair(ax, newY);
 				}
 			}
 		}
-		return make_pair(-1, -1);
-	}
-	pair<int, int> Coord = AllyCheck(int ax, int ay);
-	if (Coord.first != -1 && Coord.second != -1)
+
+	if (FindAllyFrog.first != -1 && FindAllyFrog.second != -1)
 	{
-		pBoard[AllyX][AllyY].change(0, 1); //아군 공격력 +1
+		pBoard[FindAllyFrog.first][FindAllyFrog.second]->change(0, 1); //아군 공격력 +1
 	}
 }
 
@@ -211,29 +200,28 @@ bool Pig::Attack(int ax, int ay, int bx, int by) const {
 	return false;
 }
 // if((turn % 3)== 0) Pig::own_ability(ability_range);
-void Pig::own_ability(int ability_range) {
+void Pig::own_ability(int ability_range, int ax, int ay) {
 	//3의 배수 턴마다 자신을 중심으로 5*5 안에 있는 모든 말(적의 말 포함)에게 체력 +1 => change(1, 0) 이용하기 
-
-	pair<int, int> findAllyPig(int ax, int ay) {
+	int newRow;
+	int newCol;
+	pair<int, int> findAllyPig;
 		// 주변 8칸 확인
 		for (int i = -2; i <= 2; ++i) {
-			for (int j = -2; j <= 2; ++j) {
-				int newRow = ax + i;
-				int newCol = ay + j;
+			for (int j = -2; j <= 2; ++j) 
+			{
+				newRow = ax + i;
+				newCol = ay + j;
 
 				// 유효한 범위 내에 있는지 확인
-				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-					return make_pair(newRow, newCol);
+				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) 
+				{
+					findAllyPig = make_pair(newRow, newCol);
 				}
 			}
 		}
-		// 주변에 말이 없으면 (-1, -1)을 반환
-		return make_pair(-1, -1);
-	}
 
-	pair<int, int> Coord = findAllyPig(int ax, int ay);
-	int newRow = Coord.first; //x좌표
-	int newCol = Coord.second; //y좌표
+	findAllyPig.first = newRow; //x좌표
+	findAllyPig.second = newCol; //y좌표
 	pBoard[newRow][newCol].change(1, 0); // 체력+1 
 }
 
@@ -279,28 +267,24 @@ bool Elephant::Attack(int ax, int ay, int bx, int by) const {
 }
 /* Attack함수의 리턴값이 true이면 코끼리 말이 공격한 것이므로
    own_ability함수 실행 */
-void Elephant::own_ability(int ability_range) {
+void Elephant::own_ability(int ability_range, int ax, int ay) {
 	//공격 시 자신을 중심으로 3*3 안에 있는 모든 말(아군 말 포함) 체력-1
-
-	pair<int, int> findAllyElephant(int ax, int ay) {
+	int newRow;
+	int newCol;
+	pair<int, int> findAllyElephant;
 		// 주변 8칸 확인
 		for (int i = -1; i <= 1; ++i) {
 			for (int j = -1; j <= 1; ++j) {
-				int newRow = ax + i;
-				int newCol = ay + j;
+				newRow = ax + i;
+				newCol = ay + j;
 
 				// 유효한 범위 내에 있는지 확인
 				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-					return make_pair(newRow, newCol);
+					findAllyElephant = make_pair(newRow, newCol);
 				}
 			}
 		}
-		// 주변에 말이 없으면 (-1, -1)을 반환
-		return make_pair(-1, -1);
-	}
-
-	pair<int, int> Coord = findAllyElephant(int ax, int ay);
-	int newRow = Coord.first; // x좌표
-	int newCol = Coord.second; // y좌표
+	findAllyElephant.first = newRow; // x좌표
+	findAllyElephant.second = newCol; // y좌표
 	pBoard[newRow][newCol].change(-1, 0); //체력 -1 
 }
