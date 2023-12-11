@@ -49,11 +49,3 @@ int Animal::get_hp() {
 const int Animal::get_hp() const {
 	return this->hp;
 }
-
-unsigned int Animal::get_team() {
-	return this->iTeam;
-}
-
-unsigned int Animal::get_type() {
-	return this->iType;
-}

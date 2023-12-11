@@ -13,7 +13,7 @@ public:
 	Animal* GetAnimal(int x, int y);
 	const Animal* GetAnimal(int x, int y) const;
 
-	bool MoveTo(int ax, int ay, int bx, int by);
+	bool MoveTo(int ax, int ay, int bx, int by); 
 	
 };
 

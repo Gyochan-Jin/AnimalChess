@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Animal.h"
+#include "Board.h"
 
 class Cow : public Animal {
 private:
@@ -9,7 +10,7 @@ public:
 	Cow(unsigned int iTeam);
 	bool Move(int ax, int ay, int bx, int by) const;
 	bool Attack(int ax, int ay, int bx, int by) const;
-	void own_ability(int ability_range, int hp, int ax, int ay);
+	void own_ability(Board& pBoard, int ax, int ay);
 };
 class Duck : public Animal {
 private:
@@ -18,7 +19,7 @@ public:
 	Duck(unsigned int iTeam);
 	bool Move(int ax, int ay, int bx, int by) const;
 	bool Attack(int ax, int ay, int bx, int by) const;
-	void own_ability(int ability_range, int ax, int ay);
+	void own_ability(Board& pBoard, int ax, int ay);
 };
 class Frog : public Animal {
 private:
@@ -27,7 +28,7 @@ public:
 	Frog(unsigned int iTeam);
 	bool Move(int ax, int ay, int bx, int by) const;
 	bool Attack(int ax, int ay, int bx, int by) const;
-	void own_ability(int ability_range, int ax, int ay);
+	void own_ability(Board& pBoard, int ax, int ay);
 };
 
 class Rabbit : public Animal{		
@@ -44,7 +45,7 @@ class Pig : public Animal{
 		Pig(unsigned int iTeam);
 		bool Move(int ax, int ay, int bx, int by) const;
 		bool Attack(int ax, int ay, int bx, int by) const;
-		void own_ability(int ability_range, int ax, int ay);
+		void own_ability(Board& pBoard, int ax, int ay);
 };
 
 class Hippo : public Animal{
@@ -62,5 +63,5 @@ class Elephant : public Animal{
 		Elephant(unsigned int iTeam);
 		bool Move(int ax, int ay, int bx, int by) const;
 		bool Attack(int ax, int ay, int bx, int by) const;
-		void own_ability(int ability_range, int ax, int ay);
+		void own_ability(Board& pBoard, int ax, int ay);
 };

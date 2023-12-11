@@ -21,7 +21,17 @@ void Graphics::Draw(void) const {
 	int player1_animal_damage[7] = {};
 	int player2_animal_damage[7] = {};
 
-	cout << "좌표를 입력하여 말을 움직이세요 ex) B1 B2" << endl;
+	cout << "좌표를 입력하여 말을 움직이세요 ex) B1 B2" << endl; 
+	cout << "두 칸씩 움직일 수 있는 토끼를 제외한 모든 말은 한 칸씩 움직일 수 있습니다" << endl;
+	cout << "C : 피격 시 자신을 중심으로 3*3 안에 있는 아군에게 공격력+1/체력+1" << endl;
+	cout << "D : 자신을 중심으로 3*3 안에 있는 아군이 피격 시 해당 아군의 체력+1" << endl;
+	cout << "F : 자신과 같은 라인(x축, y축)에 있는 아군의 공격력 + 1" << endl;
+	cout << "P : 3의 배수 턴마다 자신을 중심으로 5*5 안에 있는 모든 말(적의 말 포함)에게 체력 +1" << endl;
+	cout << "H : 자신이 공격한 상대의 hp가 0이하가 되면 자신의 공격력+1, 체력+1" << endl;
+	cout << "E : 공격 시 자신을 중심으로 3*3 안에 있는 모든 말(아군 말 포함) 체력-1" << endl;
+
+	cout << "선공은 player1 (파랑) 입니다" << endl;
+	cout << endl;
 
 	for (int i = 0; i <= 8; i++) {
 		for (int j = 0; j <= 8; j++) {
@@ -65,6 +75,7 @@ void Graphics::Draw(void) const {
 				else if (currentAnimal != nullptr && currentAnimal->Type == ianimal[k] && currentAnimal->Team == Animal::player2) {
 					player2_animal_hp[k] = currentAnimal->get_hp();
 					player2_animal_damage[k] = currentAnimal->get_attack_damage();
+				}
 			}			
 		}
 		cout << endl;
@@ -72,10 +83,11 @@ void Graphics::Draw(void) const {
 	
 	string aniname[] = {"C", "D", "F", "R", "P", "H", "E"};
 
+	cout << endl;
 	cout << "    |       P1       |       P2       |" << endl;
 	cout << "----|----HP----AD----|----HP----AD----|" << endl;
 	for (int i = 0; i <= 6; i++) {
-		cout << aniname[i] << " |    " << player1_animal_hp[i] << "    " << player1_animal_damage[i] << " | " << player2_animal_hp[i] << "    " << player2_animal_damage[i] << " | " << endl;
+		cout << "  " << aniname[i] << " |    " << player1_animal_hp[i] << "     " << player1_animal_damage[i] << "     |     " << player2_animal_hp[i] << "     " << player2_animal_damage[i] << "    |     " << endl;
 	}
 	return;
 }

@@ -11,6 +11,8 @@ private:
 
 	//처음은 player1이 먼저 시작
 	unsigned int iTeam = Animal::player1;
+	
+	
 
 private:
 	Console(Console& program);
@@ -18,6 +20,9 @@ private:
 	void ExecuteCommand(void);
 
 public:
+
+	int turn = 1;
+
 	Console(void);
 
 	int Run(void);

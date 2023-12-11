@@ -39,8 +39,6 @@ class Animal{
 		bool get_survive();
 		int get_hp();
 		const int get_hp() const;
-		unsigned int get_team();
-		unsigned int get_type();
 		
 	public:
 		const unsigned int &Type = iType;

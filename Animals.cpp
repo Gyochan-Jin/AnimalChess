@@ -28,7 +28,7 @@ bool Cow::Attack(int ax, int ay, int bx, int by) const {
 }
 
 
-void Cow_own_ability(int ability_range, int hp, int ax, int ay) {
+void Cow::own_ability(Board& pBoard, int ax, int ay) {
 	//피격 시 자신을 중심으로 3*3 안에 있는 아군에게 공격력+1/체력+1 => change(1, 1) 이용하기
 	int newRow;
 	int newCol;
@@ -44,7 +44,7 @@ void Cow_own_ability(int ability_range, int hp, int ax, int ay) {
 				// 유효한 범위 내에 있는지 확인
 				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
 					// 아군 말이 있는지 확인
-					if (pBoard[newRow][newCol].team == pBoard[ax][ay].team) {
+					if (pBoard.GetAnimal(newRow, newCol)->Team == pBoard.GetAnimal(ax, ay)->Team) {
 						findAllyCow = make_pair(newRow, newCol);
 					}
 				}
@@ -52,7 +52,7 @@ void Cow_own_ability(int ability_range, int hp, int ax, int ay) {
 		}
 	findAllyCow.first = newRow; //아군위치 x좌표
 	findAllyCow.second = newCol; //아군위치 y좌표
-	pBoard[newRow][newCol].change(1, 1); //아군 공격력 +1
+	pBoard.GetAnimal(newRow, newCol)->change(1, 1); //아군 공격력 +1
 }
 
 //오리 클래스
@@ -74,7 +74,7 @@ bool Duck::Attack(int ax, int ay, int bx, int by) const {
 }
 
 
-void Duck_own_ability(int ability_range, int ax, int ay) {
+void Duck::own_ability(Board& pBoard, int ax, int ay) {
 	//자신을 중심으로 3*3 안에 있는 아군이 피격 시 해당 아군의 체력+1 => change(1, 0) 이용하기
 	int newRow;
 	int newCol;
@@ -87,13 +87,15 @@ void Duck_own_ability(int ability_range, int ax, int ay) {
 				newRow = ax + i;
 				newCol = ay + j;
 				// 유효한 범위 내에 있는지 확인
-				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) 
+				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)
 				{
 					// 아군 말이 있는지 확인
-					if (pBoard[newRow][newCol].team == pBoard[ax][ay].team) 
-					{
-						findAllyDuck = make_pair(newRow, newCol);
-					}
+					if (pBoard.GetAnimal(newRow, newCol) != nullptr) { // 예외 처리
+						if (pBoard.GetAnimal(newRow, newCol)->Team == pBoard.GetAnimal(ax, ay)->Team)
+						{
+							findAllyDuck = make_pair(newRow, newCol);
+						}
+				    }
 				}
 			}
 		}
@@ -101,7 +103,7 @@ void Duck_own_ability(int ability_range, int ax, int ay) {
 	findAllyDuck.second = newCol;
 	if (findAllyDuck.first != -1 && findAllyDuck.second != -1)
 	{
-		pBoard[findAllyDuck.first][findAllyDuck.second].change(1, 0); //아군 체력 +1
+		pBoard.GetAnimal(findAllyDuck.first, findAllyDuck.second)->change(1, 0); //아군 체력 +1
 	}
 }
 
@@ -122,7 +124,7 @@ bool Frog::Attack(int ax, int ay, int bx, int by) const {
 
 	return false;
 }
-void Frog_own_ability(int ability_range, int ax, int ay) {
+void Frog::own_ability(Board& pBoard, int ax, int ay) {
 	/*자신과 같은 라인(x축, y축)에 있는 아군의 공격력 + 1
 	x축과 y축에 말이 있는지 확인
 	그 말이 아군이라면 => change(0,1) 이용하기  */
@@ -135,9 +137,11 @@ void Frog_own_ability(int ability_range, int ax, int ay) {
 			if (newX >= 0 && newX < 8)
 			{
 				// x축에 아군 말이 있는지 확인
-				if (pBoard[newX][ay].team == pBoard[ax][ay].team)
-				{
-					FindAllyFrog =  make_pair(newX, ay); //아군말 좌표 반환
+				if (pBoard.GetAnimal(newX, ay) != nullptr) { // 예외 처리
+					if (pBoard.GetAnimal(newX, ay)->Team == pBoard.GetAnimal(ax, ay)->Team)
+					{
+						FindAllyFrog = make_pair(newX, ay); //아군말 좌표 반환
+					}
 				}
 			}
 			int newY = ay + i;
@@ -145,16 +149,18 @@ void Frog_own_ability(int ability_range, int ax, int ay) {
 			if (newY >= 0 && newY < 8)
 			{
 				// y축에 아군 말이 있는지 확인
-				if (pBoard[ax][newY].team == pBoard[ax][ay].team)
-				{
-					FindAllyFrog =  make_pair(ax, newY);
+				if (pBoard.GetAnimal(ax, newY) != nullptr) { // 예외 처리
+					if (pBoard.GetAnimal(ax, newY)->Team == pBoard.GetAnimal(ax, ay)->Team)
+					{
+						FindAllyFrog = make_pair(ax, newY);
+					}
 				}
 			}
 		}
 
 	if (FindAllyFrog.first != -1 && FindAllyFrog.second != -1)
 	{
-		pBoard[FindAllyFrog.first][FindAllyFrog.second]->change(0, 1); //아군 공격력 +1
+		pBoard.GetAnimal(FindAllyFrog.first, FindAllyFrog.second)->change(0, 1); //아군 공격력 +1
 	}
 }
 
@@ -200,7 +206,7 @@ bool Pig::Attack(int ax, int ay, int bx, int by) const {
 	return false;
 }
 // if((turn % 3)== 0) Pig::own_ability(ability_range);
-void Pig::own_ability(int ability_range, int ax, int ay) {
+void Pig::own_ability(Board& pBoard, int ax, int ay) {
 	//3의 배수 턴마다 자신을 중심으로 5*5 안에 있는 모든 말(적의 말 포함)에게 체력 +1 => change(1, 0) 이용하기 
 	int newRow;
 	int newCol;
@@ -213,16 +219,17 @@ void Pig::own_ability(int ability_range, int ax, int ay) {
 				newCol = ay + j;
 
 				// 유효한 범위 내에 있는지 확인
-				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) 
-				{
-					findAllyPig = make_pair(newRow, newCol);
+				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+					if (pBoard.GetAnimal(newRow, newCol) != nullptr) { // 예외 처리
+						findAllyPig = make_pair(newRow, newCol);
+					}
 				}
 			}
 		}
 
 	findAllyPig.first = newRow; //x좌표
 	findAllyPig.second = newCol; //y좌표
-	pBoard[newRow][newCol].change(1, 0); // 체력+1 
+	pBoard.GetAnimal(newRow, newCol)->change(1, 0); // 체력+1 
 }
 
 // 하마 클래스 
@@ -267,7 +274,7 @@ bool Elephant::Attack(int ax, int ay, int bx, int by) const {
 }
 /* Attack함수의 리턴값이 true이면 코끼리 말이 공격한 것이므로
    own_ability함수 실행 */
-void Elephant::own_ability(int ability_range, int ax, int ay) {
+void Elephant::own_ability(Board& pBoard, int ax, int ay) {
 	//공격 시 자신을 중심으로 3*3 안에 있는 모든 말(아군 말 포함) 체력-1
 	int newRow;
 	int newCol;
@@ -280,11 +287,13 @@ void Elephant::own_ability(int ability_range, int ax, int ay) {
 
 				// 유효한 범위 내에 있는지 확인
 				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
-					findAllyElephant = make_pair(newRow, newCol);
+					if (pBoard.GetAnimal(newRow, newCol) != nullptr) { // 예외 처리
+						findAllyElephant = make_pair(newRow, newCol);
+					}
 				}
 			}
 		}
 	findAllyElephant.first = newRow; // x좌표
 	findAllyElephant.second = newCol; // y좌표
-	pBoard[newRow][newCol].change(-1, 0); //체력 -1 
+	pBoard.GetAnimal(newRow, newCol)->change(-1, 0); //체력 -1 
 }

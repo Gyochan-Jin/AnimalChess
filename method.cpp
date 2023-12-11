@@ -83,7 +83,6 @@ const Animal* Board::GetAnimal(int x, int y) const {
 	return 0;
 }
 
-
 //=============Graphics ¸Þ¼­µå===============
 
 Graphics::Graphics(const Board* pBoard):
