@@ -28,9 +28,11 @@ void Animal::damaged(int attack_damage){
 }
 
 void Animal::change(int hp, int attack_damage){
-	this->hp += hp;
-	this->attack_damage += attack_damage;
-	if(hp <= 0) survive = false;
+	if (this != nullptr) {
+		this->hp += hp;
+		this->attack_damage += attack_damage;
+		if (hp <= 0) survive = false;
+	}
 }
 
 int Animal::get_attack_damage(){

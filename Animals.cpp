@@ -44,8 +44,10 @@ void Cow::own_ability(Board& pBoard, int ax, int ay) {
 				// 유효한 범위 내에 있는지 확인
 				if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
 					// 아군 말이 있는지 확인
-					if (pBoard.GetAnimal(newRow, newCol)->Team == pBoard.GetAnimal(ax, ay)->Team) {
-						findAllyCow = make_pair(newRow, newCol);
+					if (pBoard.GetAnimal(newRow, newCol) != nullptr) { // 예외처리
+						if (pBoard.GetAnimal(newRow, newCol)->Team == pBoard.GetAnimal(ax, ay)->Team) {
+							findAllyCow = make_pair(newRow, newCol);
+						}
 					}
 				}
 			}

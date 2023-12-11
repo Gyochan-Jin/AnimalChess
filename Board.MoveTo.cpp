@@ -24,13 +24,15 @@ bool Board::MoveTo(int ax, int ay, int bx, int by) {
 		int damageA = pBoard[ax][ay]->get_attack_damage();
 		int damageB = pBoard[bx][by]->get_attack_damage();
 
-		for (int i = 0; i <= 8; i++) {
-			for (int j = 0; j <= 8; j++) {
-				Animal* currentAnimal = pBoard[i][j];  
-				if (currentAnimal != nullptr && currentAnimal->Type == Animal::Duck) { // D의 위치 찾기
-					if (pBoard[ax][ay]->Team == pBoard[i][j]->Team) { // 아군이 피격 되었으면 F의 own_ability() 호출
-						Frog* frog = dynamic_cast<Frog*>(currentAnimal);
-						if (frog != nullptr) frog->own_ability(*this, i, j); 
+		for (int i = 0; i < 8; i++) { 
+			for (int j = 0; j < 8; j++) { 
+				Animal* currentAnimal = pBoard[i][j]; 
+				if (currentAnimal != nullptr) { 
+					if (currentAnimal->Type == Animal::Duck) { // D의 위치 찾기
+						Frog* frog = dynamic_cast<Frog*>(currentAnimal); 
+						if (pBoard[ax][ay]->Team == pBoard[i][j]->Team) { // 아군이 피격 되었으면 F의 own_ability() 호출 
+							if (frog != nullptr) frog->own_ability(*this, i, j); 
+						}
 					}
 				}
 			}
