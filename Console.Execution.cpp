@@ -40,9 +40,11 @@ void Console::ExecuteCommand(void) {
 		for (int j = 0; j <= 8; j++) {
 			Animal* currentAnimal = board.GetAnimal(i, j);
 
-			if (currentAnimal != nullptr && currentAnimal->Type == Animal::Frog) { // F의 own_ability() 호출    
-				Frog* frog = dynamic_cast<Frog*>(currentAnimal);
-				if (frog != nullptr) frog->own_ability(board, i, j);
+			if (currentAnimal != nullptr && currentAnimal->Type == Animal::Frog) { // 턴 수가 3의 배수이면 F의 own_ability() 호출    
+				if ((turn % 3) == 0) {
+					Frog* frog = dynamic_cast<Frog*>(currentAnimal);
+					if (frog != nullptr) frog->own_ability(board, i, j);
+				}
 			}
 
 			else if (currentAnimal != nullptr && currentAnimal->Type == Animal::Pig) { // 턴 수가 3의 배수이면 P의 own_ability() 호출 
